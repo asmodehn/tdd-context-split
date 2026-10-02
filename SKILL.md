@@ -146,6 +146,22 @@ the CURRENT behaviour was right.
 
 Only here. Everything before this point had to stay clean.
 
+**Favour a deep module** - a function, class or package whose interface is small next to what it
+does. Tests pin visible behaviour, not the implementation, so the test set is sized by the
+behaviours the interface exposes, however the code behind it is arranged - fewer than the same code
+split shallow, where each internal step gets a test of its own. And the test set has just pinned
+that interface, and step 5 forbids you to edit those tests. Behind a small surface a later
+implementation change needs no edit to them; behind a shallow one each change forces an edit to
+them, and that is the leak this skill exists to close. Expose nothing the spec does not need.
+
+Fewer tests is not less proof: step 8 still mutates the implementation and must kill each mutant
+THROUGH the interface. A survivor is triaged in this order. First, look for an interface input that
+tells it apart: if one exists the set is incomplete, so redispatch for that test (step 4's
+mechanism; you do not write it). Only when no input can tell it apart is it equivalent, recorded per
+`references/evidence-rules.md`. And if what it changes matters but nothing at the interface can see
+it, the spec is short: back to step 2. An internal part complex enough to want its own tests is a
+deep module of its own: give it an interface and a spec, and test it there.
+
 ### 8. Green, then mutation-prove
 
 Full suite green is the floor, not the proof.

@@ -36,6 +36,9 @@ RETURN a test set, not prose. For each test:
     not optional
   - the MUTATION that must kill it: the obvious wrong implementation which, if written, this
     test must fail against
+  - where its expected value comes from: a literal from the spec, or a measurement of the real
+    system. Never anything a mutation of the code under test would also move - a call into it,
+    a constant it returns unchanged, a mock of it. A constant it takes as INPUT is fine
 
 Also return, plainly:
 
@@ -81,8 +84,9 @@ naming the field.
 - **"Retained behaviour the spec failed to mention" is the second most valuable.** Add it to the
   spec. That is the clause the split exists to produce.
 - **A returned test that cannot fail** - an assertion that matches incidentally, a fixture that
-  cannot reach the branch it is named for - is a defect in the set, and it is the reviewer's job in
-  step 4 to catch it, not yours to silently rewrite.
+  cannot reach the branch it is named for, an expected value the code under test itself produces -
+  is a defect in the set, and it is the reviewer's job in step 4 to catch it, not yours to silently
+  rewrite.
 
 ## Anti-patterns in the dispatch
 

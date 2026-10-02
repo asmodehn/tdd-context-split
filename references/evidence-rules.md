@@ -42,9 +42,18 @@ moment you edit in response to it.
   assigns and the assertion still passes, asserting nothing. After a deletion, grep for the name and
   convert those tests to read the real storage - or mutate once, on purpose, to prove they still
   test anything.
-- **Four ways a green suite constrains nothing:** an assertion that matches incidentally; a patch
+- **Five ways a green suite constrains nothing:** an assertion that matches incidentally; a patch
   that pins the USE of a value and not its DERIVATION; a kill read off an exit code with no tally; a
-  fixture that cannot reach the branch the test is named for.
+  fixture that cannot reach the branch the test is named for; an expected value the subject itself
+  produces.
+- **That last one is the tautological test, and the criterion is a mutation, not a source.** The
+  expected side is tautological when a mutation of the subject would move it too, so the test
+  passes against every wrong implementation. The common shapes: the expected value is computed by
+  calling the subject; it is a constant the subject returns or passes through unchanged; the
+  subject itself is mocked and the test asserts the mock's configured return. A constant that is an
+  INPUT to the derivation is not one: `build_url() == BASE + "/foo"` pins the derivation, since
+  mutating it does not move `BASE`. Mutation proof is what exposes a tautology, because the obvious
+  wrong implementation SURVIVES it; a set never mutation-proved has not been checked for one.
 
 ## Mutation proof
 
@@ -102,6 +111,13 @@ and yours at step 8.
 - **A change that leaves an existing assertion unable to FAIL is a wrong fix.** Find the fix that
   leaves it live. "It is dead now, but I will keep it as documentation" is the signal to change
   approach, not to add a comment.
+- **Every expected value in the set has a source the reviewer can name.** One that a mutation of
+  the subject would move is a tautology, the fifth of the "Five ways" above, and step 4 is where it
+  is caught by reading: there is no implementation to mutate yet.
+- **A test that reaches past the surface the spec describes pins shape, not behaviour** - a private
+  helper called directly, an internal mocked as if it were a collaborator, one test per internal
+  step. It forces the next design to be shallow. Return it to the author with the gap stated in spec
+  terms.
 - **Configure a double so the real path COMPLETES, rather than injecting an exception into the code
   under test.** A raise aborts mid-flight: the test stops exercising what it claims, it shortcuts
   the normal failure-reporting path, and it kills sibling assertions that can now never be what
