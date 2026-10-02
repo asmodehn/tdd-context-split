@@ -199,9 +199,9 @@ construction and have not been probed anywhere.
 - **Persistent memory crosses.** Whatever store your harness injects on its own - a memory index, a
   notes file, a retrieved profile - a fresh context could quote from it with no tool call. So do
   not write the approach into memory mid-slice, and never instruct the test author to consult it.
-- **Always-on instruction files are visible too** (`AGENTS.md`, `CLAUDE.md` and friends). That is
-  correct and wanted - they are rules, not plans. Keep it that way: an instruction file is not the
-  place to record the approach for the change in flight.
+- **Always-on instruction files are visible too** (`AGENTS.md`, or whatever your harness loads on
+  its own). That is correct and wanted - they are rules, not plans. Keep it that way: an instruction
+  file is not the place to record the approach for the change in flight.
 - **Handoff and plan documents.** Never pass a path to one. Their whole purpose is to carry the
   approach.
 - **The spec itself.** The commonest leak is a spec written after the plan, in the plan's vocabulary.
@@ -226,11 +226,10 @@ Option 3 is the status quo everywhere else. It is a fallback, not the process.
 
 The requirement is a ROLE, not a product: _a context that has not seen the plan_.
 
-| Harness          | Implementation                                                                                     |
-| ---------------- | -------------------------------------------------------------------------------------------------- |
-| Claude Code      | the `Agent` tool. A new call starts fresh - measured: no parent transcript, no parent tool results |
-| Other agent CLIs | that client's own subagent or task mechanism                                                       |
-| No mechanism     | a second session, or a second human - see "Degrading honestly"                                     |
+| Harness                  | Implementation                                                                    |
+| ------------------------ | --------------------------------------------------------------------------------- |
+| Agent CLI with subagents | its own subagent or task mechanism - probe that a new dispatch starts fresh first |
+| No mechanism             | a second session, or a second human - see "Degrading honestly"                    |
 
 Use a general-purpose agent with file-reading tools, not a minimal one: the test author has to
 orient on the code and the existing test module itself. Note the tradeoff you are making - the

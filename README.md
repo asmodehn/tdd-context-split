@@ -22,14 +22,41 @@ skill was in fact lost earlier the same week.
 
 ## Using it in a repository
 
-Symlink the repository in under the skill's own name, at either discovery path:
+Either way the consumer ends up with a `tdd-context-split/` directory holding `SKILL.md` in its
+`.agents/skills/`, which is all a loader looks for. What differs is who else gets it.
+
+### As a submodule - shared and pinned
+
+The consumer tracks the skill at a fixed commit, so every clone gets it and an update is a reviewed
+pointer bump:
+
+```bash
+git submodule add https://github.com/asmodehn/tdd-context-split.git .agents/skills/tdd-context-split
+```
+
+If the consumer's `.agents/skills` is itself a submodule, add it from inside that one instead, and
+clone with `--recurse-submodules` (or run `git submodule update --init --recursive`) so the nested
+checkout is not left empty:
+
+```bash
+cd .agents/skills
+git submodule add https://github.com/asmodehn/tdd-context-split.git tdd-context-split
+```
+
+Landing a change to the skill is then one commit per level: here, push; in `.agents/skills`, commit
+the pointer bump; in the consumer, commit the `.agents/skills` bump.
+
+### As a symlink - one developer's checkout
+
+Nothing is tracked, so only the machine that made the link has the skill, and edits in the checkout
+are live at once:
 
 ```bash
 ln -s ~/Projects/tdd-context-split .agents/skills/tdd-context-split
 ```
 
-Measured 2026-09-25, against a consumer whose `.agents/skills` is itself a git submodule and whose
-`.claude/skills` is a symlink to it: both Claude Code and OpenCode discover a SYMLINKED skill
+Measured 2026-09-25, against a consumer whose `.agents/skills` is itself a git submodule, with a
+harness-specific skills directory symlinked to it: two agent CLIs discovered a SYMLINKED skill
 directory through that double indirection, and the consumer's own lint and format checks stayed
 green with the link in place.
 
@@ -44,10 +71,4 @@ echo 'tdd-context-split' >> "$(git rev-parse --git-dir)/info/exclude"
 
 ## Keeping it portable
 
-The skill's whole claim is that it travels. Two rules follow, and both are checkable:
-
-- **No repo-relative path, no project-specific tool, no instruction-file name.** A reader in
-  another repository must not be sent to a file that does not exist there.
-- **Nothing that duplicates a consumer's always-on instructions.** Where a project's `AGENTS.md`
-  or equivalent already states a rule, the skill states the part that is general and lets the
-  project keep the part that is local.
+The maintenance rules for this repository are in `AGENTS.md`.
