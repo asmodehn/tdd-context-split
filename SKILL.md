@@ -212,8 +212,14 @@ construction and have not been probed anywhere.
 
 ## Degrading honestly
 
-If no fresh context is available, say so and name which guarantee you are dropping. Fallbacks, best
-first:
+If a role's required context is not available, say so and name which guarantee you are dropping.
+Each role has its own ladder, because what each context must or must not have seen differs.
+
+**Never the test author's context for the gate or the review.** At step 4 it would gate its own
+set. At step 9 it would see the implementation, and step 7 sends a survivor back to that same
+author, which must still have seen no plan.
+
+**The test author (step 3).** Best first:
 
 1. A second session, given only the spec pasted in.
 2. A human writing the test set from the spec (this is the XP original - see below).
@@ -222,6 +228,34 @@ first:
 
 Option 3 is the status quo everywhere else. It is a fallback, not the process.
 
+**The gate (step 4).** No plan exists yet, so your transcript holds only your orientation. The loss
+that costs is the higher class, not the shared transcript. Best first:
+
+1. A higher-class reviewer that sees your transcript.
+2. A higher-class reviewer in a fresh context, handed the spec, the returned set and the paths you
+   oriented on.
+3. A human, handed the same.
+4. A reviewer at your own class that sees your transcript. It is a second pass at your level, and
+   it mostly re-derives your blind spots: mark the set as gated at your own class.
+5. A fresh context at your own class, handed what rung 2 is handed. It ranks below rung 4 here and
+   above it at step 9: with no plan yet, the transcript it lacks is only orientation, and it still
+   shares your blind spots.
+6. Judge the set yourself against `references/evidence-rules.md`, section "Test design", item by
+   item, and mark it self-gated.
+
+**The review (step 9).** Your transcript now holds the plan, so at your own class a fresh context is
+the better reviewer: it judges the diff without your reasons for it. Best first:
+
+1. A higher-class reviewer that sees your transcript.
+2. A fresh context at your own class or higher, handed the diff, the spec, the tests, what you
+   measured and your suspicions - never the plan.
+3. A human, handed the same.
+4. A reviewer at your own class that sees your transcript, marked as such.
+5. Review it yourself against `references/evidence-rules.md`, and mark the result self-reviewed.
+
+Every rung of the step-9 ladder keeps step 9's loop: an edit made in response voids the pass, and
+the corrected diff goes back to the same rung.
+
 ## Portability
 
 The requirement is a ROLE, not a product: _a context that has not seen the plan_.
@@ -229,7 +263,7 @@ The requirement is a ROLE, not a product: _a context that has not seen the plan_
 | Harness                  | Implementation                                                                    |
 | ------------------------ | --------------------------------------------------------------------------------- |
 | Agent CLI with subagents | its own subagent or task mechanism - probe that a new dispatch starts fresh first |
-| No mechanism             | a second session, or a second human - see "Degrading honestly"                    |
+| No mechanism             | a second session, or a second human, for each role - see "Degrading honestly"     |
 
 Use a general-purpose agent with file-reading tools, not a minimal one: the test author has to
 orient on the code and the existing test module itself. Note the tradeoff you are making - the
@@ -240,7 +274,9 @@ clean one. The isolation is what is being bought.
 mirror case: they are MEANT to see your transcript, so there is no isolation left to protect and
 nothing is spent by making them stronger. Both should be a HIGHER-class model than the
 implementer. A gate running at the implementer's own level mostly re-derives the implementer's
-blind spots, which is the one thing it exists not to do.
+blind spots, which is the one thing it exists not to do. With no higher class available, the step-9
+reviewer is the exception: by then your transcript holds the plan, so a fresh context does better
+than one that shares it - see "Degrading honestly".
 
 ## Lineage, and why this is not the skill you find online
 
