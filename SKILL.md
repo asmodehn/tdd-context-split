@@ -4,8 +4,9 @@ description:
   Test-first workflow in which the test author and the implementer do NOT share a context, only the
   spec. Use before any behaviour change - feature, bugfix, or a refactor that alters observable
   behaviour. Covers the Given/When/Then spec format, dispatching a fresh-context test author, red
-  for the predicted reason, and mutation proof. Not for spikes, debugging, or tests written for code
-  that already exists.
+  for the predicted reason, and mutation proof. Also use before declaring ANY change done, tested or
+  not: its review step applies on its own, and a defect a review finds re-enters the steps that fit.
+  Its test-first sequence is not for spikes, debugging, or tests for code that already exists.
 license: GPL-3.0-or-later
 ---
 
@@ -44,6 +45,11 @@ to the implementation"; claim only what is true.
   applies: a separate context authors the experiment set (what to vary, what to observe, what result
   falsifies what). Improvising your own probes and then calling the result verified is the identical
   failure mode - you sample where you already expect agreement.
+- Before declaring any change done, tested or not - code, configuration, documentation. Step 9
+  applies on its own, whether or not the rest of the sequence ran. With no spec and no tests to
+  hand over, the reviewer gets the diff, the contracts it touches (the docstrings, comments and
+  documents that state what it must do), what you measured and your suspicions.
+- A defect a review found. See "Entering from a review" below.
 
 ## When NOT to use
 
@@ -52,6 +58,49 @@ to the implementation"; claim only what is true.
 - Pure refactors with no observable behaviour change.
 - Writing tests for code that already exists - that is coverage work, and the split buys nothing
   because the implementation is already public.
+
+These exclude the sequence, not the review: step 9 still runs before any of them is called done.
+None of them is "the owner waived the tests". That case is below, and it keeps the whole sequence.
+
+## When the owner waives automated tests
+
+A behaviour change can be exempted from automated tests by whoever owns the code - a tool checked
+by daily use, a script with no harness. That waives the TESTS, not the skill: the change still has
+a contract, and the by-hand checks are its test set. Reading the waiver as "out of scope" drops the
+review along with the tests, and leaves the change checked only by the context that wrote it.
+
+Every step is kept; what changes is the artifact each one works on:
+
+| Step             | With tests waived                                                                       |
+| ---------------- | --------------------------------------------------------------------------------------- |
+| 0, 1, 2          | as written: the spec names every context the checks must cover                          |
+| 3 author         | the fresh context authors the by-hand checks, as for an experiment                      |
+| 4 gate           | as written, on those checks                                                             |
+| 5 transcribe     | run the checks as dictated; one that cannot run as dictated is reported, not bent       |
+| 6 pin, then flip | two runs by hand: the old expectation holds, then the new one fails                     |
+| 7 design         | as written                                                                              |
+| 8 mutation proof | by hand: break the code each check is about and see it fail; the rest as written        |
+| 9 review         | as written: with no test in the tree, the only check by a context that did not write it |
+
+Say in the result that the checks were run by hand and are not in the tree, so the next change to
+the code knows nothing guards it.
+
+## Entering from a review
+
+A review finding is an entry point, whoever's review it was. Its claim - what fails, in which
+context - is the spec input for step 2, and its reproduction, when it has one, is evidence for that
+spec, not the red of step 6: step 6 is still two runs of what the fresh author dictates. Then:
+
+- **The fix changes behaviour**: from step 2, the full sequence, or the waived one above. Your
+  context has now seen the implementation, and usually a fix in mind, so step 4's premise - "has
+  not seen a plan, because none exists yet" - no longer holds for you: the gate is a fresh context
+  or a human, rungs 2, 3 or 5 of its ladder, never one that shares your transcript; with none of
+  them, rung 6, marked self-gated. Write the spec from the
+  finding's claim alone, in observable terms: the fix you already have in mind is a plan.
+- **The fix is wording, a comment or a document**: step 9 alone.
+- **The finding is refuted**: say so where it was raised, with the measurement. Nothing to fix.
+
+The fix is itself unreviewed work, so step 9 runs on it again - the loop step 9 already describes.
 
 ## Tool authorization
 
@@ -208,7 +257,8 @@ construction and have not been probed anywhere.
   Step 2 comes before step 7 for this reason.
 - **A transcript-sharing reviewer is not a split.** If your "independent" perspective receives your
   conversation history, it sees exactly what you saw. It is a second PASS, not a second CONTEXT. Use
-  it as the gate in step 4, never as the author in step 3.
+  it as the gate in step 4 - unless you entered from a review, when your transcript holds a plan -
+  never as the author in step 3.
 
 ## Degrading honestly
 
@@ -229,7 +279,8 @@ author, which must still have seen no plan.
 Option 3 is the status quo everywhere else. It is a fallback, not the process.
 
 **The gate (step 4).** No plan exists yet, so your transcript holds only your orientation. The loss
-that costs is the higher class, not the shared transcript. Best first:
+that costs is the higher class, not the shared transcript. Entering from a review, a plan does
+exist: skip rungs 1 and 4. Best first:
 
 1. A higher-class reviewer that sees your transcript.
 2. A higher-class reviewer in a fresh context, handed the spec, the returned set and the paths you
@@ -274,9 +325,10 @@ clean one. The isolation is what is being bought.
 mirror case: they are MEANT to see your transcript, so there is no isolation left to protect and
 nothing is spent by making them stronger. Both should be a HIGHER-class model than the
 implementer. A gate running at the implementer's own level mostly re-derives the implementer's
-blind spots, which is the one thing it exists not to do. With no higher class available, the step-9
-reviewer is the exception: by then your transcript holds the plan, so a fresh context does better
-than one that shares it - see "Degrading honestly".
+blind spots, which is the one thing it exists not to do. Two exceptions, both where your transcript
+already holds a plan, so a fresh context does better than one that shares it: the step-9 reviewer
+with no higher class available, and the step-4 gate when you entered from a review - see "Degrading
+honestly".
 
 ## Lineage, and why this is not the skill you find online
 
