@@ -59,13 +59,28 @@ moment you edit in response to it.
 
 Red-first proves a test MOVES. Mutation proof is what shows it CONSTRAINS.
 
+- **Coverage first.** Before running the map, measure which changed lines the tests execute. A
+  changed line no test runs cannot kill anything placed on it: triage it as a survivor - redispatch
+  for a test (step 4's mechanism - you do not write it), or, when no interface input reaches it, the
+  spec is short. Coverage says a line ran, never that anything checked it, so it bounds mutation
+  proof and never replaces it. A tool can misattribute lines, so check a gap against a line known to
+  run before believing it; where no tool measures the language, say so - the gap is reported, never
+  assumed covered.
+- **One source file per kill map, and only the tests that exercise it.** A mutant runs the test
+  module for that file, or the tests a coverage pass taken with the baseline run credits with the
+  mutated line - never a stored map, which goes stale silently, and never the whole suite once per
+  mutant. A change touching several files gets one map per file, in turn. That selection runs green
+  against the unmutated source first, since run alone it can fail for reasons the full suite hides,
+  and every such failure would read as a kill. A narrowed run can also miss a test and report a
+  false survivor: re-run a survivor once against the full suite before triaging it. The full suite
+  runs once, as step 8's floor.
 - **Compile the mutated source before running it.** A mutation that is syntactically invalid kills
   every test for the wrong reason, and every label "dies" identically. Report it as broken rather
   than as a verdict, and move on. This makes the whole class of false kills impossible rather than
   merely noticeable.
-- **One kill map = ONE run, against the FINAL source.** Touch the probe, re-run the whole map. Never
-  splice verdicts from two runs with an edit in between - stitched verdicts read exactly like real
-  ones.
+- **One kill map = ONE run, against the FINAL source.** Touch the probe, re-run that file's whole
+  map; a file edited after its map is mapped again. Never splice verdicts from two runs with an
+  edit in between - stitched verdicts read exactly like real ones.
 - **Read the full output, not a grep for the mutation you just added.** That grep is how the other
   verdicts go unlooked-at.
 - **An equivalent mutant is RECORDED, never absorbed by a passing run.** Some mutations cannot be

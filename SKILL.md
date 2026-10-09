@@ -79,7 +79,7 @@ Every step is kept; what changes is the artifact each one works on:
 | 5 transcribe     | run the checks as dictated; one that cannot run as dictated is reported, not bent       |
 | 6 pin, then flip | two runs by hand: the old expectation holds, then the new one fails                     |
 | 7 design         | as written                                                                              |
-| 8 mutation proof | by hand: break the code each check is about and see it fail; the rest as written        |
+| 8 mutation proof | by hand: break the code each check is about and see it fail; no coverage step           |
 | 9 review         | as written: with no test in the tree, the only check by a context that did not write it |
 
 Say in the result that the checks were run by hand and are not in the tree, so the next change to
@@ -218,7 +218,9 @@ Full suite green is the floor, not the proof.
 **Red-first proves a test MOVES. It does not prove it CONSTRAINS.** Write the obvious wrong
 implementation and confirm the test fails. One kill map, one run, against the final source, and
 compile the mutated source before running it - an invalid mutant kills every test for the wrong
-reason. A green suite gives no signal about what nobody wrote a test for.
+reason. A green suite gives no signal about what nobody wrote a test for. Measure coverage of the
+changed lines first, then mutate one source file at a time, each mutant running only the tests that
+exercise that file.
 
 Also check: does any EXISTING assertion become unable to fail because of your change? If so the fix
 is wrong - find one that leaves it live.
