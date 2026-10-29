@@ -166,6 +166,11 @@ author - its context is still clean, and it can be continued rather than started
 gap in spec terms: observable, no layer named. Transcribe what comes back. Patching the set yourself
 is the same leak as editing it in step 5, one step earlier.
 
+**A returned test another test already makes is a copy.** When an existing test makes every one of
+its assertions on the same input, the gate sends it back and the author extends the existing test
+instead - a loop over the new input, one more assertion - so the set grows by what is new and
+nothing else.
+
 **A gate that keeps finding new inputs is reporting on the design, not on the set.** When the
 redispatch for one gap comes back and the next pass names an input the spec never listed - another
 path into the same operation, the same operations in another order, a stale view of the same
@@ -228,6 +233,30 @@ deep module of its own: give it an interface and a spec, and test it there.
 ### 8. Green, then mutation-prove
 
 Full suite green is the floor, not the proof.
+
+**Then consolidate, before the proof.** Gated, red for the predicted reason and now green, the tests
+are the net that makes restructuring safe, so this is the moment to use it. Working with agents
+makes it matter more, not less: a change made one finding at a time tends to add a path beside the
+existing one rather than through it, and each change's copies become the next review's findings.
+Three passes, in this order, the first two each ending green:
+
+1. **The production code.** Fold into one every copy the change made or met in the code it
+   touches: a helper doing what one already does, a branch repeating another, a check a sibling
+   already makes. No test is edited in this pass: they pin the interface, and a consolidation that
+   needs them changed has changed it.
+2. **The tests.** Fold the copies in the tests the change touches - a test another already makes
+   on the same input, siblings differing only by data, a helper duplicated across classes - into
+   the existing test. The test author does it, redispatched as in step 4, and the gate checks that
+   no assertion was lost: you do not edit the tests, here either.
+3. **The mutations.** Re-anchor the rows written against the code before passes 1 and 2, drop the
+   rows whose code is gone, and drop a broader row only once the suite run under each row alone has
+   shown that every test failing under the narrower fails under the broader too - never on a
+   reading of the two - so the map mutates the code that ships.
+
+Measure it with `git diff --stat <base>`, smaller after the passes than before them; the folded
+copies go in the change's own commit, since history has no use for redundant code. Dead code a
+removal leaves outside the lines the change touches waits for the next consolidation pass. The
+kill map below runs once, against the consolidated source and tests, never the first green ones.
 
 **Red-first proves a test MOVES. It does not prove it CONSTRAINS.** Write the obvious wrong
 implementation and confirm the test fails. One kill map, one run, against the final source, and
