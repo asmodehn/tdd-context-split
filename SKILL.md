@@ -100,6 +100,12 @@ spec, not the red of step 6: step 6 is still two runs of what the fresh author d
 - **The fix is wording, a comment or a document**: step 9 alone.
 - **The finding is refuted**: say so where it was raised, with the measurement. Nothing to fix.
 
+**Findings sharing a cause are one spec.** When several findings share one, or a finding is the
+next input past a check an earlier fix added, write one spec for the class of input they share,
+each finding one Given under it. A fix per finding makes the code as specific as its tests: each
+finding's test passes and the next input stays open. In the Transformation Priority Premise's
+words, as the tests get more specific, the code gets more generic.
+
 The fix is itself unreviewed work, so step 9 runs on it again - the loop step 9 already describes.
 
 ## Tool authorization
@@ -160,6 +166,14 @@ author - its context is still clean, and it can be continued rather than started
 gap in spec terms: observable, no layer named. Transcribe what comes back. Patching the set yourself
 is the same leak as editing it in step 5, one step earlier.
 
+**A gate that keeps finding new inputs is reporting on the design, not on the set.** When the
+redispatch for one gap comes back and the next pass names an input the spec never listed - another
+path into the same operation, the same operations in another order, a stale view of the same
+object - stop amending. Two such passes in a row mean the behaviour asked for is decided where it
+cannot see its whole input: go back to the design question before step 7, with the inputs found so
+far as its evidence. A spec amended once per new input grows the fix one case at a time, and the
+test set grows with it while no line of the change has been written.
+
 ### 5. Transcribe verbatim
 
 You do not edit tests authored for your own change. A test that does not run as dictated is
@@ -218,7 +232,8 @@ Full suite green is the floor, not the proof.
 **Red-first proves a test MOVES. It does not prove it CONSTRAINS.** Write the obvious wrong
 implementation and confirm the test fails. One kill map, one run, against the final source, and
 compile the mutated source before running it - an invalid mutant kills every test for the wrong
-reason. A green suite gives no signal about what nobody wrote a test for. Measure coverage of the
+reason. A green suite gives no signal about what nobody wrote a test for, and a kill map none about
+a check nobody wrote: a mutant changes code that exists. Measure coverage of the
 changed lines first, then mutate one source file at a time, each mutant running only the tests that
 exercise that file.
 
