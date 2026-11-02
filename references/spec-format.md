@@ -105,6 +105,8 @@ The falsification clause is not optional. Without it the experiment can only con
 ## Checklist before dispatching
 
 - Every noun is findable in the repository, or is plainly a user-facing concept.
+- Each clause is an example of a written rule, and the spec names the rules it instantiates; a
+  clause no rule decides is a gap in the rules (`prose-hierarchy.md`), not one more clause.
 - At least one clause pins behaviour that must be RETAINED.
 - No clause names a layer, a pattern, or a mechanism.
 - Written before any implementation reasoning appeared in your context, not after.

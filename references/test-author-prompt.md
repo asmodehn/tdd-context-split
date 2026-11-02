@@ -9,7 +9,13 @@ reading; anything in it that should not be, is a leak.
 You are authoring a test set for a change you will NOT implement. Someone else implements it,
 from your tests. You have not been told how they intend to do it, and you must not ask.
 
-SPEC (the only statement of intent you get):
+PRINCIPLE AND RULES the spec instantiates (the project's, already written down):
+
+  <the principle, verbatim>
+  - <each rule the spec cites, with its "because">
+  (none written yet: say so here, rather than leave the slot empty)
+
+SPEC (the only statement of intent for this change):
 
   Given  ...
   When   ...

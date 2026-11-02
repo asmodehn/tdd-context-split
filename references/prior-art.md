@@ -40,3 +40,24 @@ Dispatch a fresh context with no task, asking only what it can see: the first us
 conversation, any prior tool call or result, any instruction file, any memory or profile injected
 without a tool call. The answers tell you exactly which leak vectors are live in your setup, and
 which the harness closes for you.
+
+## The prose hierarchy: what was borrowed
+
+Surveyed 2026-11-02, from the sources named; `prose-hierarchy.md` carries the mechanism. Two
+published spec-driven agent toolkits were read as well: one keeps a constitution of principles, the
+other files of conventions, and neither derives its rules from a principle - both list them. What
+the mechanism takes, and from where:
+
+| Source                                                                 | Taken                                                                                       |
+| ---------------------------------------------------------------------- | ------------------------------------------------------------------------------------------- |
+| Example Mapping (Wynne, 2015)                                          | rules between story and examples; a question nobody present answers is parked with an owner |
+| KAOS (van Lamsweerde, RE'01)                                           | WHY questions climb, HOW questions descend; obstacle analysis: what makes a goal false      |
+| GSN Community Standard v3 (SCSC-141C, 2021)                            | the inference between levels stated explicitly, with its justification                      |
+| Zave and Jackson, "Four Dark Corners" (TOSEM 1997)                     | domain knowledge kept apart from requirements, and checked as true of the environment       |
+| Leveson, intent specifications                                         | the WHY recorded at each level; an assumption that stops holding triggers re-analysis       |
+| DO-178C derived requirements (via a checklist citing 5.1.1.b, 5.1.2.h) | what traces to no parent is named, states its reason, and goes back up                      |
+| a spec-driven toolkit's clarification step                             | one question at a time, each with a recommended answer                                      |
+
+Not taken: formal refinement with proof obligations (Event-B), which needs a formal model; ADR
+numbering, since a number is a coordinate - the project's own decision log keeps the rejected
+alternatives.

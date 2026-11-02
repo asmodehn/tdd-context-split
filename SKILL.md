@@ -1,12 +1,11 @@
 ---
 name: tdd-context-split
 description:
-  Test-first workflow in which the test author and the implementer do NOT share a context, only the
-  spec. Use before any behaviour change - feature, bugfix, or a refactor that alters observable
-  behaviour. Covers the Given/When/Then spec format, dispatching a fresh-context test author, red
-  for the predicted reason, and mutation proof. Also use before declaring ANY change done, tested or
-  not: its review step applies on its own, and a defect a review finds re-enters the steps that fit.
-  Its test-first sequence is not for spikes, debugging, or tests for code that already exists.
+  Test-first workflow where the test author and the implementer share only the spec, never a
+  context. Use before any behaviour change (feature, bugfix, behaviour-altering refactor), before
+  declaring any change done (its review step stands alone), when a review finding re-enters, and to
+  write a project's principles and rules down with its owner. Not for spikes, debugging, or tests
+  for existing code.
 license: GPL-3.0-or-later
 ---
 
@@ -50,6 +49,9 @@ to the implementation"; claim only what is true.
   hand over, the reviewer gets the diff, the contracts it touches (the docstrings, comments and
   documents that state what it must do), what you measured and your suspicions.
 - A defect a review found. See "Entering from a review" below.
+- Working in a project whose principles and rules are not written down, or when the owner corrects
+  you, or a finding fits no written rule: build the prose hierarchy above the spec, with the owner,
+  per `references/prose-hierarchy.md`.
 
 ## When NOT to use
 
@@ -147,7 +149,8 @@ See `references/spec-format.md` for the format, the plan-versus-spec test, and w
 
 Template in `references/test-author-prompt.md`. Three rules that are not negotiable:
 
-- **The spec goes inline in the prompt.** Never a path to a document that also holds the approach.
+- **The spec goes inline in the prompt**, with the principle and rules it cites. Never a path to a
+  document that also holds the approach.
 - **Give paths to READ, not conclusions.** The test author orients itself.
 - **Ask for the test set, not for tests you described.** Names, fixtures, the OLD assertion and the
   NEW one, the retained behaviour to pin, the mutation that must kill each test.
@@ -176,8 +179,9 @@ redispatch for one gap comes back and the next pass names an input the spec neve
 path into the same operation, the same operations in another order, a stale view of the same
 object - stop amending. Two such passes in a row mean the behaviour asked for is decided where it
 cannot see its whole input: go back to the design question before step 7, with the inputs found so
-far as its evidence. A spec amended once per new input grows the fix one case at a time, and the
-test set grows with it while no line of the change has been written.
+far as its evidence - first asking whether one written rule decides them all, per
+`references/prose-hierarchy.md`. A spec amended once per new input grows the fix one case at a
+time, and the test set grows with it while no line of the change has been written.
 
 ### 5. Transcribe verbatim
 
