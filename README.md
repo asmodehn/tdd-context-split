@@ -43,8 +43,8 @@ cd .agents/skills
 git submodule add https://github.com/asmodehn/tdd-context-split.git tdd-context-split
 ```
 
-Landing a change to the skill is then one commit per level: here, push; in `.agents/skills`, commit
-the pointer bump; in the consumer, commit the `.agents/skills` bump.
+Landing a change to the skill: commit here and push. Each level above moves its pointer inside the
+commit whose own change needs the new version, never in a commit of its own.
 
 ### As a symlink - one developer's checkout
 
