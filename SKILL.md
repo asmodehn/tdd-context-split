@@ -270,6 +270,17 @@ a check nobody wrote: a mutant changes code that exists. Measure coverage of the
 changed lines first, then mutate one source file at a time, each mutant running only the tests that
 exercise that file.
 
+**In a Python suite, a kill map lives while its code moves, then is dropped.** Python suites are
+the only ones this rule was drawn from; for others, nothing here says yet whether keeping a map
+pays. In one, the map surfaces what the change's tests miss and what their structure hides, and
+rerunning it while the code it targets and those tests still change keeps a later edit from quietly
+undoing what it proved. Once both settle, its rows are dropped and never run again: every rerun
+costs the suite's time per row. When they have settled is the process's to say (the project's
+review, its release). Only a piece that is crucial and hard to check by reading its tests
+(concurrency, timing, a wire protocol) earns a map kept for good; the project names which.
+Everywhere else the test classes and their structure are the evidence of what is covered and what
+is missing.
+
 Also check: does any EXISTING assertion become unable to fail because of your change? If so the fix
 is wrong - find one that leaves it live.
 
