@@ -169,10 +169,11 @@ author - its context is still clean, and it can be continued rather than started
 gap in spec terms: observable, no layer named. Transcribe what comes back. Patching the set yourself
 is the same leak as editing it in step 5, one step earlier.
 
-**A returned test another test already makes is a copy.** When an existing test makes every one of
-its assertions on the same input, the gate sends it back and the author extends the existing test
-instead - a loop over the new input, one more assertion - so the set grows by what is new and
-nothing else.
+**A returned test that pins an outcome another test already pins is a copy**, whatever its input:
+the same assertions on the same input, or the same outcome reached from another input. The gate
+sends it back and the author extends the existing test instead - the new input as one more row,
+kept since it may reach a branch of its own - so the set grows by what is new and nothing else. A
+search for identical tests is blind to the second kind.
 
 **A gate that keeps finding new inputs is reporting on the design, not on the set.** When the
 redispatch for one gap comes back and the next pass names an input the spec never listed - another
@@ -224,7 +225,10 @@ behaviours the interface exposes, however the code behind it is arranged - fewer
 split shallow, where each internal step gets a test of its own. And the test set has just pinned
 that interface, and step 5 forbids you to edit those tests. Behind a small surface a later
 implementation change needs no edit to them; behind a shallow one each change forces an edit to
-them, and that is the leak this skill exists to close. Expose nothing the spec does not need.
+them, and that is the leak this skill exists to close. Expose nothing the spec does not need. A
+behaviour is a distinct outcome - what the interface returns, the exceptions it raises, the
+refusals it states - and typed outcomes, an exception type per refusal, make their count readable
+from the interface: a test per input shape beyond that count is step 4's copy.
 
 Fewer tests is not less proof: step 8 still mutates the implementation and must kill each mutant
 THROUGH the interface. A survivor is triaged in this order. First, look for an interface input that
@@ -248,10 +252,10 @@ Three passes, in this order, the first two each ending green:
    touches: a helper doing what one already does, a branch repeating another, a check a sibling
    already makes. No test is edited in this pass: they pin the interface, and a consolidation that
    needs them changed has changed it.
-2. **The tests.** Fold the copies in the tests the change touches - a test another already makes
-   on the same input, siblings differing only by data, a helper duplicated across classes - into
-   the existing test. The test author does it, redispatched as in step 4, and the gate checks that
-   no assertion was lost: you do not edit the tests, here either.
+2. **The tests.** Fold the copies in the tests the change touches - step 4's copies, siblings
+   differing only by data, a helper duplicated across classes - into the existing test. The test
+   author does it, redispatched as in step 4, and the gate checks that no assertion was lost: you
+   do not edit the tests, here either.
 3. **The mutations.** Re-anchor the rows written against the code before passes 1 and 2, drop the
    rows whose code is gone, and drop a broader row only once the suite run under each row alone has
    shown that every test failing under the narrower fails under the broader too - never on a
