@@ -87,8 +87,10 @@ Red-first proves a test MOVES. Mutation proof is what shows it CONSTRAINS.
   killed because they do not change behaviour. That is a finding about the code, and it has to be
   written down and argued; letting the map go green around it turns "no test covers this" into "this
   is covered".
-- **Run the lint and QA gate AFTER the last artifact exists**, including untracked probe files. A
-  gate that ran before you wrote the file did not check it.
+- **Run the QA check AFTER the last artifact exists**, including untracked probe files. A
+  gate that ran before you wrote the file did not check it. The formatter is part of writing the
+  artifact, not of the gate: it rewrites files, so the file every suite run and kill map measures is
+  the formatted one.
 - **Do not commit while a measurement of uncommitted work is running.** Commit hooks of the
   stash-checkout-run-restore kind put HEAD on disk for the duration, so a mutation run or a red-first
   run of an uncommitted fix silently measures HEAD instead of your tree. The probe's own end-of-run
