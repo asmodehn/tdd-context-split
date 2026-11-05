@@ -122,6 +122,26 @@ Red-first proves a test MOVES. Mutation proof is what shows it CONSTRAINS.
 These decide whether a test set is worth transcribing - they are the reviewer's checklist at step 4
 and yours at step 8.
 
+- **Every added test gets a row in the consolidation table, and the gate fills every cell.** The
+  table is part of the gate's verdict at step 4, one row per test the set adds:
+
+  | Added test                | Existing test checked (same interface, same outcome)   | Verdict                                  |
+  | ------------------------- | ------------------------------------------------------ | ---------------------------------------- |
+  | `<module>.<Class>.<test>` | `<module>.<Class>.<test>`, or `none: searched <files>` | `fold`, or `keep: <unreached code path>` |
+  - **Where to search:** the other tests of the returned set, and the existing test tree: for each
+    interface the added test calls (the function, the endpoint, the page), search the test files
+    for that name and read every test that calls it. A test matches when it calls the same
+    interface and asserts the same observable result, whatever its input (`SKILL.md`, step 4).
+  - **`fold`:** the added test's input becomes one more row - a subtest, a parameter, an entry in
+    the loop - of the existing test, and the added test is deleted. The author does it, not you.
+  - **`keep: <unreached code path>`** is allowed only when the added test reaches a code path the
+    existing test cannot reach, and the cell names that code path (not a file): a function, a
+    branch condition, an exception type.
+    A reason that names no path ("clearer", "the spec lists both", "a different fixture") is a
+    `fold`.
+  - **`none: searched <files>`** lists the files searched, so the next reader can repeat the
+    search. An empty cell means the search was not done: the verdict is incomplete.
+
 - **Test code is code.** Same review as production for structure, duplication and dead paths. The
   tradeoffs resolve differently in one place: explicitness beats DRY, so keep the assertion visible
   rather than generated.

@@ -158,19 +158,30 @@ Template in `references/test-author-prompt.md`. Three rules that are not negotia
 ### 4. Gate the test set before transcribing
 
 A second reviewer - one that sees your transcript, but has not seen a plan, because none exists yet -
-checks the returned set against the spec. The one question worth asking it: **does this set pin the
-behaviour that must be RETAINED, or only the behaviour being added?**
+checks the returned set against the spec. Ask it two questions, and require an answer to each in its
+verdict:
 
-The checklist it should judge the set against is in `references/evidence-rules.md`, section "Test
-design".
+1. **Does this set pin the behaviour that must be RETAINED, or only the behaviour being added?**
+2. **Which existing test already pins each added test's outcome?** For every test the set adds, the
+   gate searches the returned set AND the existing test tree for tests calling the same interface,
+   and records what it compared in a consolidation table, one row per added test.
+
+The checklist it judges the set against, the consolidation table's format included, is in
+`references/evidence-rules.md`, section "Test design". **A verdict without that table, or with a
+row left empty, is incomplete: send it back to the gate, not to the author.** A gate that answered
+"no copies" without naming what it compared did not search.
 
 **If the gate finds the set deficient, the fix does not come from you.** Redispatch to the same test
 author - its context is still clean, and it can be continued rather than started over - stating the
 gap in spec terms: observable, no layer named. Transcribe what comes back. Patching the set yourself
 is the same leak as editing it in step 5, one step earlier.
 
-**A returned test that pins an outcome another test already pins is a copy**, whatever its input:
-the same assertions on the same input, or the same outcome reached from another input. The gate
+**A returned test that pins an outcome another test already pins is a copy**, whatever its input -
+another test in the returned set or one already in the suite: the same assertions on the same
+input, or the same outcome reached from another input. Same outcome means the same interface
+called (the function, the endpoint, the page) and the same observable result asserted (the value
+returned, the refusal raised, the output rendered); the input does not count. The same result
+reached through another interface is not a copy. The gate
 sends it back and the author extends the existing test instead - the new input as one more row,
 kept since it may reach a branch of its own - so the set grows by what is new and nothing else. A
 search for identical tests is blind to the second kind. **Fold this one at the second test:** it
