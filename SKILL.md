@@ -173,7 +173,10 @@ is the same leak as editing it in step 5, one step earlier.
 the same assertions on the same input, or the same outcome reached from another input. The gate
 sends it back and the author extends the existing test instead - the new input as one more row,
 kept since it may reach a branch of its own - so the set grows by what is new and nothing else. A
-search for identical tests is blind to the second kind.
+search for identical tests is blind to the second kind. **Fold this one at the second test:** it
+reaches the same outcome with the same assertions for the same reason, and extending the existing
+test adds an input rather than inventing anything shared, so it is a duplicate, not a similar
+case, and the Rule of Three does not defer it.
 
 **A gate that keeps finding new inputs is reporting on the design, not on the set.** When the
 redispatch for one gap comes back and the next pass names an input the spec never listed - another
@@ -248,14 +251,23 @@ makes it matter more, not less: a change made one finding at a time tends to add
 existing one rather than through it, and each change's copies become the next review's findings.
 Three passes, in this order, the first two each ending green:
 
-1. **The production code.** Fold into one every copy the change made or met in the code it
-   touches: a helper doing what one already does, a branch repeating another, a check a sibling
-   already makes. No test is edited in this pass: they pin the interface, and a consolidation that
-   needs them changed has changed it.
-2. **The tests.** Fold the copies in the tests the change touches - step 4's copies, siblings
-   differing only by data, a helper duplicated across classes - into the existing test. The test
-   author does it, redispatched as in step 4, and the gate checks that no assertion was lost: you
-   do not edit the tests, here either.
+**The Rule of Three governs every pass, production code and tests alike. Fold a pair only when
+all four of these are the same:** what they do; the types they use, where the language states them
+(an annotation, a signature, a model field); the shape of the data they read or write; and why
+they exist. If any one differs, the two are only similar: leave them, and when a third similar
+case appears, extract what all three share. **In the tests, explicitness wins:** a shared helper
+or fixture must leave each test showing its own input, action and assertion at a glance - if the
+extraction makes a test harder to read than the copies, keep the copies.
+
+1. **The production code.** Fold into one every duplicate the change added or found in the code it
+   touches: two helpers doing the same work, two branches with the same body, a check a sibling
+   already makes, under the four-part test above. No test is edited in this pass: they pin the
+   interface, and a consolidation that needs them changed has changed it.
+2. **The tests.** Fold the duplicates in the tests the change touches - step 4's copies, siblings
+   differing only by data, a helper duplicated across classes - into the existing test, under the
+   same four-part test and the explicitness limit above. The test author does it, redispatched as
+   in step 4, and the gate checks that no assertion was lost: you do not edit the tests, here
+   either.
 3. **The mutations.** Re-anchor the rows written against the code before passes 1 and 2, drop the
    rows whose code is gone, and drop a broader row only once the suite run under each row alone has
    shown that every test failing under the narrower fails under the broader too - never on a
