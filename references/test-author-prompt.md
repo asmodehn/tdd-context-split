@@ -31,6 +31,12 @@ ORIENT FIRST, by reading - in full, not skimmed:
 
 HOW TO RUN TESTS HERE: <the project's test command, and any constraint on it>
 
+ADD ROWS, NOT TESTS: for each interface a test of yours would call (the function directly, the
+endpoint through the test client, the page through the browser), search the test files for that
+name first. Where an existing test calls it, add your input there as one more row, its expected
+outcome carried in the row - whatever that outcome is. Write a new test only for an interface no
+existing test calls, and name the files you searched.
+
 RETURN a test set, not prose. For each test:
 
   - the test name

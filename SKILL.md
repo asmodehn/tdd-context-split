@@ -162,9 +162,9 @@ checks the returned set against the spec. Ask it two questions, and require an a
 verdict:
 
 1. **Does this set pin the behaviour that must be RETAINED, or only the behaviour being added?**
-2. **Which existing test already pins each added test's outcome?** For every test the set adds, the
-   gate searches the returned set AND the existing test tree for tests calling the same interface,
-   and records what it compared in a consolidation table, one row per added test.
+2. **Which existing test already calls each added test's interface?** For every test the set adds,
+   the gate searches the returned set AND the existing test tree for tests calling the same
+   interface, and records what it compared in a consolidation table, one row per added test.
 
 The checklist it judges the set against, the consolidation table's format included, is in
 `references/evidence-rules.md`, section "Test design". **A verdict without that table, or with a
@@ -176,18 +176,19 @@ author - its context is still clean, and it can be continued rather than started
 gap in spec terms: observable, no layer named. Transcribe what comes back. Patching the set yourself
 is the same leak as editing it in step 5, one step earlier.
 
-**A returned test that pins an outcome another test already pins is a copy**, whatever its input -
-another test in the returned set or one already in the suite: the same assertions on the same
-input, or the same outcome reached from another input. Same outcome means the same interface
-called (the function, the endpoint, the page) and the same observable result asserted (the value
-returned, the refusal raised, the output rendered); the input does not count. The same result
-reached through another interface is not a copy. The gate
-sends it back and the author extends the existing test instead - the new input as one more row,
-kept since it may reach a branch of its own - so the set grows by what is new and nothing else. A
-search for identical tests is blind to the second kind. **Fold this one at the second test:** it
-reaches the same outcome with the same assertions for the same reason, and extending the existing
-test adds an input rather than inventing anything shared, so it is a duplicate, not a similar
-case, and the Rule of Three does not defer it.
+**A returned test that calls an interface another test already calls is a copy**, whatever its
+input and whatever its expected outcome - another test in the returned set or one already in the
+suite. The interface is what the test calls, and how: the function called directly, the endpoint
+through the test client, the page through the browser - a browser test and a test-client test of
+one page are two interfaces. The gate judges only the tests the set adds; the existing suite's own
+copies are folded by a review, not by this gate. The gate sends
+it back and the author extends the existing test instead: the new input becomes one more row, and
+its expected outcome (the value returned, the status, the refusal raised, the output rendered) is
+carried in that row - so the set grows by what is new and nothing else. A search for identical
+tests is blind to this, and so is a search for identical outcomes: a refusal and an acceptance of
+the same interface are two rows of one test. **Fold this one at the second test:** extending the
+existing test adds an input rather than inventing anything shared, so it is a duplicate, not a
+similar case, and the Rule of Three does not defer it.
 
 **A gate that keeps finding new inputs is reporting on the design, not on the set.** When the
 redispatch for one gap comes back and the next pass names an input the spec never listed - another
@@ -242,7 +243,8 @@ implementation change needs no edit to them; behind a shallow one each change fo
 them, and that is the leak this skill exists to close. Expose nothing the spec does not need. A
 behaviour is a distinct outcome - what the interface returns, the exceptions it raises, the
 refusals it states - and typed outcomes, an exception type per refusal, make their count readable
-from the interface: a test per input shape beyond that count is step 4's copy.
+from the interface: that count bounds the values of the expected-outcome column in the interface's
+one test, never the number of tests (step 4).
 
 Fewer tests is not less proof: step 8 still mutates the implementation and must kill each mutant
 THROUGH the interface. A survivor is triaged in this order. First, look for an interface input that
