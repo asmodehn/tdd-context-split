@@ -22,6 +22,30 @@ And    <the consequence that must still hold - the RETAINED behaviour>
 Every spec needs at least one `And` clause pinning retained behaviour. A spec with only new
 behaviour produces a test set that proves the feature appeared and nothing about what it broke.
 
+## The spec outlives the change as the tests' docstrings
+
+The spec is written for one change, and nothing else keeps it once that change lands. So every test
+a change adds or edits carries, as its docstring, the clauses it pins, in the same shape:
+
+```python
+def test_member_of_another_workspace_cannot_read_settings(self):
+    """Given  an account that belongs to a workspace and has stored settings
+    When   a member of a different workspace reads those settings
+    Then   the read is refused
+    """
+```
+
+- **One test, its own clauses.** The retained-behaviour `And` is required of the spec, not of each
+  docstring: the test that pins the retained behaviour states it as its own `Then`, as the one
+  above does for the first `And` of the worked example below.
+- **A test whose rows each carry their own expected outcome** - subtests, parameters, entries in a
+  loop - says in its `Given` and `When` what kind of input the rows hold, and in its `Then` that
+  each row gets the outcome it states. Its rows never become separate tests to get a docstring
+  each.
+- **An existing test gets its clauses when a change edits it.** A prose docstring it already has
+  stays below the clauses wherever it explains why the test exists; what only restates them
+  goes. Converting tests nobody is editing is a change of its own, never part of another.
+
 ## The discriminator
 
 > **If it names a class, field, method, or file that does not exist yet, it is a plan, not a spec.**

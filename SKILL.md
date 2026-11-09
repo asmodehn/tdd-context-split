@@ -152,8 +152,8 @@ Template in `references/test-author-prompt.md`. Three rules that are not negotia
 - **The spec goes inline in the prompt**, with the principle and rules it cites. Never a path to a
   document that also holds the approach.
 - **Give paths to READ, not conclusions.** The test author orients itself.
-- **Ask for the test set, not for tests you described.** Names, fixtures, the OLD assertion and the
-  NEW one, the retained behaviour to pin, the mutation that must kill each test.
+- **Ask for the test set, not for tests you described.** Names, docstrings, fixtures, the OLD
+  assertion and the NEW one, the retained behaviour to pin, the mutation that must kill each test.
 
 ### 4. Gate the test set before transcribing
 

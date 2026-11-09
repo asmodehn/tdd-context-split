@@ -143,6 +143,9 @@ and yours at step 8.
   - **`none: searched <files>`** lists the files searched, so the next reader can repeat the
     search. An empty cell means the search was not done: the verdict is incomplete.
 
+- **Every test the set adds or edits has a Given/When/Then docstring stating the clauses it pins**
+  (`spec-format.md`, "The spec outlives the change as the tests' docstrings"). A missing one, or
+  one naming a clause the test does not assert, goes back to the author.
 - **Test code is code.** Same review as production for structure, duplication and dead paths. The
   tradeoffs resolve differently in one place: explicitness beats DRY, so keep the assertion visible
   rather than generated.

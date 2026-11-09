@@ -44,8 +44,10 @@ RETURN a test set, not prose. For each test:
     over anything new
   - the assertion as it stands TODAY (so we can confirm the test reaches the code path), and
     the assertion it must become
-  - which clause of the spec it covers - including the retained-behaviour clauses, which are
-    not optional
+  - its docstring: the clauses of the spec it covers, as Given / When / Then - including the
+    retained-behaviour clauses, which are not optional. A test you extend with a row gets one
+    too; its Given and When then name the kind of input its rows hold, and any
+    prose docstring it had stays below them where it says why the test exists
   - the MUTATION that must kill it: the obvious wrong implementation which, if written, this
     test must fail against
   - where its expected value comes from: a literal from the spec, or a measurement of the real
